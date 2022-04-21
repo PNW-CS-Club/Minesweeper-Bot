@@ -34,6 +34,11 @@ public class Test {
     new WebDriverWait(driver, Duration.ofSeconds(3))
         .until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@href='/start/1']")));
     driver.findElement(By.xpath("//a[@href='/start/1']")).click();
+    /*
+     * tag type = <a>
+     * filtering by href attribute
+     * -- looking for '/start/1'
+     */
 
     // locate all the cells and store in list
     new WebDriverWait(driver, Duration.ofSeconds(3))
