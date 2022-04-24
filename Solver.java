@@ -81,10 +81,7 @@ public class Solver {
         this.driver = new EdgeDriver(options);
 
         this.driver.get("https://minesweeper.online/");
-        new WebDriverWait(this.driver, Duration.ofSeconds(3))
-                .until(ExpectedConditions
-                        .elementToBeClickable(By.xpath("//a[@class='menu-link link_new_game']")));
-        this.driver.findElement(By.xpath("//a[@class='menu-link link_new_game']")).click();
+        clickXpath("//a[@class='menu-link link_new_game']");
 
         new WebDriverWait(this.driver, Duration.ofSeconds(3))
                 .until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='levels_full']")));
@@ -123,6 +120,9 @@ public class Solver {
                 break;
         }
 
+        this.driver.quit();
+        System.exit(1);
+
         // get upper left-hand corner of game board
         System.out.println("Starting board calibration...\nPlease wait the few seconds this will take.");
         calibrateBoard();
@@ -143,6 +143,12 @@ public class Solver {
         } catch (InterruptedException e) {
             System.out.println(e);
         }
+    }
+
+    private void clickXpath(String element) {
+        new WebDriverWait(this.driver, Duration.ofSeconds(3))
+                .until(ExpectedConditions.elementToBeClickable(By.xpath(element)));
+        this.driver.findElement(By.xpath(element)).click();
     }
 
     /**
