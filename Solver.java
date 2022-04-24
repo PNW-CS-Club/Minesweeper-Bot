@@ -3,7 +3,18 @@ import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Toolkit;
 import java.awt.event.InputEvent;
+import java.time.Duration;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class Solver {
     private Robot bot;
@@ -16,6 +27,9 @@ public class Solver {
     private Cell startCell;
     private boolean infiniteLoop = true;
     private boolean guessIfDumb = true;
+
+    private WebDriver driver;
+    private List<WebElement> boardDOM;
 
     /**
      * Default constructor.
@@ -59,22 +73,49 @@ public class Solver {
         if (this.debug)
             System.out.println("Difficulty given: " + difficulty);
 
+        // selenium
+        EdgeOptions options = new EdgeOptions();
+        options.addArguments("-inprivate");
+        options.addArguments("--disable-blinkfeatures=AutomationControlled");
+        options.setExperimentalOption("excludeSwitches", Collections.singletonList("enable-automation"));
+        this.driver = new EdgeDriver(options);
+
+        this.driver.get("https://minesweeper.online/");
+        new WebDriverWait(this.driver, Duration.ofSeconds(3))
+                .until(ExpectedConditions
+                        .elementToBeClickable(By.xpath("//a[@class='menu-link link_new_game']")));
+        this.driver.findElement(By.xpath("//a[@class='menu-link link_new_game']")).click();
+
+        new WebDriverWait(this.driver, Duration.ofSeconds(3))
+                .until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='levels_full']")));
+        List<WebElement> anchors = this.driver.findElement(By.xpath("//div[@id='levels_full']"))
+                .findElements(By.tagName("a"));
+
         // create board object based on difficulty
         switch (difficulty) {
             case 1: // easy
                 this.gameBoard = new Board(9, 9, 10);
+
                 break;
             case 2: // medium
                 this.gameBoard = new Board(16, 16, 40);
+
+                anchors.get(1).click();
                 break;
             case 3: // hard
                 this.gameBoard = new Board(30, 16, 99);
+
+                anchors.get(2).click();
                 break;
             case 4: // evil
                 this.gameBoard = new Board(30, 20, 130);
+
+                anchors.get(3).click();
                 break;
             case 5: // custom
                 this.gameBoard = new Board(width, height, mineCount);
+
+                anchors.get(4).click();
                 break;
             default: // invalid difficulty
                 System.out.println("Invalid difficulty entered: " + difficulty);
