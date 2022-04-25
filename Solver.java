@@ -80,6 +80,7 @@ public class Solver {
         options.setExperimentalOption("excludeSwitches", Collections.singletonList("enable-automation"));
         this.driver = new EdgeDriver(options);
 
+        // instantiate EdgeDriver
         this.driver.get("https://minesweeper.online/");
         clickXpath("//a[@class='menu-link link_new_game']");
 
@@ -119,6 +120,11 @@ public class Solver {
                 System.exit(1);
                 break;
         }
+
+        // instantiate boardDOM
+        WebElement boardDiv = this.driver.findElement(By.xpath("//div[@id='A43']"));
+        this.boardDOM = boardDiv.findElements(By.tagName("div"));
+        System.out.println(this.boardDOM.size());
 
         this.driver.quit();
         System.exit(1);
