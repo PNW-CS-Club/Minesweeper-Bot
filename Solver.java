@@ -30,6 +30,7 @@ public class Solver {
 
     private WebDriver driver;
     private List<WebElement> boardDOM;
+    private WebElement startCellDiv;
 
     /**
      * Default constructor.
@@ -82,7 +83,7 @@ public class Solver {
 
         // instantiate EdgeDriver
         this.driver.get("https://minesweeper.online/");
-        clickXpath("//a[@class='menu-link link_new_game']");
+        clickXpath("//a[@class='menu-link link_new_game_ng']");
 
         new WebDriverWait(this.driver, Duration.ofSeconds(3))
                 .until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='levels_full']")));
@@ -126,12 +127,19 @@ public class Solver {
         this.boardDOM = boardDiv.findElements(By.tagName("div"));
         System.out.println(this.boardDOM.size());
 
-        this.driver.quit();
-        System.exit(1);
-
         // get upper left-hand corner of game board
         System.out.println("Starting board calibration...\nPlease wait the few seconds this will take.");
-        calibrateBoard();
+        // calibrateBoard();
+        for (WebElement cell : this.boardDOM) {
+            String divClass = cell.getAttribute("class");
+
+            if (divClass.contains("start")) {
+                this.startCellDiv = cell;
+                break;
+            }
+        }
+        this.driver.quit();
+        System.exit(1);
 
         // get initial board state
         syncBoard();
