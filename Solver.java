@@ -29,6 +29,7 @@ public class Solver {
     private boolean guessIfDumb = true;
 
     private WebDriver driver;
+    private String boardDOMXpath = "//div[@id='A43']";
     private List<WebElement> boardDOM;
     private WebElement startCellDiv;
 
